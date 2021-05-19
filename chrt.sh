@@ -19,12 +19,15 @@ export LOAD=$1
 # chrt --rr 50 ./job1.x 1 10 15 $LOAD & >> chrt.log
 # chrt --rr 50 ./job2.x 2 10 15 $LOAD & >> chrt.log 
 # chrt --rr 50 ./job3.x 3 10 15 $LOAD >> chrt.log
-chrt -r 50 ./job1.x 1 10 15 ${LOAD} &
+echo 0
+chrt -vr 20 taskset 4 ./job1.x 1 10 15 $LOAD & 
+echo 1
 sleep 0.005
-chrt -r 95 ./job2.x 2 10 15 ${LOAD} &
+chrt -vr 50 taskset 4 ./job2.x 2 10 15 $LOAD &
+echo 2
 sleep 0.005
-chrt -r 90 ./job3.x 3 10 15 ${LOAD}
-
+chrt -vr 90 taskset 4 ./job3.x 3 10 15 $LOAD &
+echo 3
 # note that the standard priority (15) is irrelevant here since
 # the change of the standard prio has no effect
 # for programs running in real-time mode (chrt --rr).   
